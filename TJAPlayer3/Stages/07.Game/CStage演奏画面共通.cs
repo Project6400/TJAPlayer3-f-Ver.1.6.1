@@ -641,11 +641,23 @@ namespace TJAPlayer3
 				{
 					return E判定.Perfect;
 				}
-				if ( nDeltaTime <= TJAPlayer3.nGood範囲ms * (((double)TJAPlayer3.ConfigIni.n演奏速度) / 20.0))
+				if (pChip.nLag <= TJAPlayer3.nGood範囲ms * (((double)TJAPlayer3.ConfigIni.n演奏速度) / 20.0))
 				{
-					if( TJAPlayer3.ConfigIni.bJust )
+					if (pChip.nLag >= 0)
+					{
+						if (TJAPlayer3.ConfigIni.bJust)
+							return E判定.Poor;
+						return E判定.Great;
+					}
+				}
+				if (pChip.nLag >= TJAPlayer3.nGreat範囲ms * (((double)TJAPlayer3.ConfigIni.n演奏速度) / 20.0))
+				{
+					if (pChip.nLag <= 0)
+					{
+						if (TJAPlayer3.ConfigIni.bJust)
 						return E判定.Poor;
-					return E判定.Good;
+						return E判定.Good;
+					}
 				}
 				if ( nDeltaTime <= TJAPlayer3.nPoor範囲ms * (((double)TJAPlayer3.ConfigIni.n演奏速度) / 20.0))
 				{
@@ -1335,10 +1347,27 @@ namespace TJAPlayer3
 								}
 								break;
 							case E判定.Great:
-							case E判定.Good:
 								{
 									this.CBranchScore[nPlayer].nGood++;
 									this.nヒット数_Auto含まない[nPlayer].Great++;
+									this.actCombo.n現在のコンボ数[nPlayer]++;
+									//this.actCombo.ctコンボ加算 = new CCounter( 0, 8, 10, CDTXMania.Timer );
+									//this.actCombo.ctコンボ加算.t進行();
+									if (this.actCombo.ctコンボ加算[nPlayer].b終了値に達してない)
+									{
+										this.actCombo.ctコンボ加算[nPlayer].n現在の値 = 1;
+									}
+									else
+									{
+										this.actCombo.ctコンボ加算[nPlayer].n現在の値 = 0;
+									}
+
+								}
+								break;
+							case E判定.Good:
+								{
+									this.CBranchScore[nPlayer].nGood++;
+									this.nヒット数_Auto含まない[nPlayer].Good++;
 									this.actCombo.n現在のコンボ数[ nPlayer ]++;
 									//this.actCombo.ctコンボ加算 = new CCounter( 0, 8, 10, CDTXMania.Timer );
 									//this.actCombo.ctコンボ加算.t進行();
@@ -1354,6 +1383,13 @@ namespace TJAPlayer3
 								}
 								break;
 							case E判定.Poor:
+								{
+									this.CBranchScore[nPlayer].nMiss++;
+									this.nヒット数_Auto含まない[nPlayer].Poor++;
+									this.actCombo.n現在のコンボ数[nPlayer] = 0;
+									this.actComboVoice.tReset(nPlayer);
+								}
+								break;
 							case E判定.Miss:
 							case E判定.Bad:
 								{
@@ -1404,7 +1440,7 @@ namespace TJAPlayer3
 									if (pChip.nチャンネル番号 != 0x15 && pChip.nチャンネル番号 != 0x16 && pChip.nチャンネル番号 != 0x17 && pChip.nチャンネル番号 != 0x18)
 									{
 										this.CBranchScore[nPlayer].nGood++;
-										this.nヒット数_Auto含む[nPlayer].Great++;
+										this.nヒット数_Auto含む[nPlayer].Good++;
 										this.actCombo.n現在のコンボ数[nPlayer]++;
 										//this.actCombo.ctコンボ加算.t進行();
 										if (this.actCombo.ctコンボ加算[nPlayer].b終了値に達してない)

@@ -337,7 +337,7 @@ namespace TJAPlayer3
 		public Cシステムサウンド sound音色選択音 = null;
 		public Cシステムサウンド sound難易度選択音 = null;
 		public Cシステムサウンド sound自己ベスト更新音 = null;
-
+		public Cシステムサウンド soundSongSelectIn = null;
 		//public Cシステムサウンド soundRed = null;
 		//public Cシステムサウンド soundBlue = null;
 		public Cシステムサウンド soundBalloon = null;
@@ -731,7 +731,7 @@ namespace TJAPlayer3
 			this.bgmオプション画面 = new Cシステムサウンド(@"Sounds\Option BGM.ogg", true, true, ESoundGroup.SongPlayback);
 			this.bgmコンフィグ画面 = new Cシステムサウンド(@"Sounds\Config BGM.ogg", true, true, ESoundGroup.SongPlayback);
 			this.bgm選曲画面 = new Cシステムサウンド(@"Sounds\Select BGM.ogg", true, true, ESoundGroup.SongPreview);
-
+			this.soundSongSelectIn = new Cシステムサウンド(@"Sounds\SongSelectIn.ogg", false, false, ESoundGroup.SongPreview);
 			//this.soundRed               = new Cシステムサウンド( @"Sounds\dong.ogg",            false, false, true, ESoundType.SoundEffect );
 			//this.soundBlue              = new Cシステムサウンド( @"Sounds\ka.ogg",              false, false, true, ESoundType.SoundEffect );
 			this.soundBalloon = new Cシステムサウンド(@"Sounds\balloon.ogg", false, false, ESoundGroup.SoundEffect);

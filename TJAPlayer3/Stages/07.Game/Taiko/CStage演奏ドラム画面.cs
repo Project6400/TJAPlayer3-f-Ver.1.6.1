@@ -410,9 +410,15 @@ namespace TJAPlayer3
 
 				//this.t進行描画_DANGER();
 				//this.t進行描画_判定ライン();
-				if ( !TJAPlayer3.ConfigIni.bNoInfo )
-					this.t進行描画_ネームプレート();
-				if( TJAPlayer3.ConfigIni.ShowChara )
+				if (TJAPlayer3.ConfigIni.b太鼓パートAutoPlay[0] == false)
+				{
+					this.t進行描画_スコア();
+				}
+				if (TJAPlayer3.ConfigIni.b太鼓パートAutoPlay[0] == true)
+				{
+					this.t進行描画_スコア2();
+				}
+				if ( TJAPlayer3.ConfigIni.ShowChara )
 					this.actChara.On進行描画();
 
 				if(TJAPlayer3.ConfigIni.ShowMob && TJAPlayer3.ConfigIni.eGameMode != EGame.特訓モード)
@@ -2045,19 +2051,17 @@ namespace TJAPlayer3
 			}
 		}
 		private bool bStartFlag;
-		private void t進行描画_ネームプレート()
+		private void t進行描画_スコア()
 		{
-			//if( this.txNamePlate != null )
-				//this.txNamePlate.t2D描画( CDTXMania.app.Device, 0, 100 );
-			
-			//if(CDTXMania.Tx.Taiko_NamePlate[0] != null) CDTXMania.Tx.Taiko_NamePlate[0].t2D描画(CDTXMania.app.Device, 0, 100);
-			//if(CDTXMania.stage演奏ドラム画面.bDoublePlay && CDTXMania.Tx.Taiko_NamePlate[1] != null) CDTXMania.Tx.Taiko_NamePlate[0].t2D描画(CDTXMania.app.Device, 0, 600);
-
-			//if ( CDTXMania.stage演奏ドラム画面.bDoublePlay )
-			//{
-			//    if( this.txNamePlate2P != null )
-			//        this.txNamePlate2P.t2D描画( CDTXMania.app.Device, 314, 636 );
-			//}
+			for (int i = 0; i < 256; i++)
+				this.t大文字表示(220, 300, string.Format("{0,4:###0}", this.nヒット数_Auto含まない[0].Perfect * 2 + this.nヒット数_Auto含まない[0].Great + this.nヒット数_Auto含まない[0].Good));
+			this.t小文字表示(250, 340, string.Format("{0,4:###0}", GetRoll(0)), false);
+		}
+		private void t進行描画_スコア2()
+		{
+			for (int i = 0; i < 256; i++)
+				this.t大文字表示(220, 300, string.Format("{0,4:###0}", this.nヒット数_Auto含む[0].Perfect * 2 + this.nヒット数_Auto含む[0].Great + this.nヒット数_Auto含む[0].Good));
+			this.t小文字表示(250, 340, string.Format("{0,4:###0}", GetRoll(0)), false);
 		}
 
 		private void t進行描画_リアルタイム判定数表示()
@@ -2074,15 +2078,19 @@ namespace TJAPlayer3
 				if( TJAPlayer3.Tx.Judge_Meter != null )
 					TJAPlayer3.Tx.Judge_Meter.t2D描画( TJAPlayer3.app.Device, 0, 360 );
 
-				this.t小文字表示( 102, 494, string.Format( "{0,4:###0}", this.nヒット数_Auto含まない[0].Perfect.ToString() ), false );
-				this.t小文字表示( 102, 532, string.Format( "{0,4:###0}", this.nヒット数_Auto含まない[0].Great.ToString() ), false );
-				this.t小文字表示( 102, 570, string.Format( "{0,4:###0}", this.nヒット数_Auto含まない[0].Miss.ToString() ), false );
-				this.t小文字表示(102, 634, string.Format("{0,4:###0}", GetRoll(0)), false);
+				this.t小文字表示(102, 494, string.Format("{0,4:###0}", this.nヒット数_Auto含まない[0].Perfect.ToString()), false);
+				this.t小文字表示(102, 532, string.Format("{0,4:###0}", this.nヒット数_Auto含まない[0].Good.ToString()), false);
+				this.t小文字表示(102, 570, string.Format("{0,4:###0}", this.nヒット数_Auto含まない[0].Great.ToString()), false);
+				this.t小文字表示(102, 608, string.Format("{0,4:###0}", this.nヒット数_Auto含まない[0].Poor.ToString()), false);
+				this.t小文字表示(102, 646, string.Format("{0,4:###0}", this.nヒット数_Auto含まない[0].Miss.ToString()), false);
+				this.t小文字表示(102, 684, string.Format("{0,4:###0}", GetRoll(0)), false);
 
-				int nNowTotal = this.nヒット数_Auto含まない[0].Perfect + this.nヒット数_Auto含まない[0].Great + this.nヒット数_Auto含まない[0].Miss;
-				double dbたたけた率 = Math.Round((100.0 * ( TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない[0].Perfect + TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない[0].Great)) / (double)nNowTotal);
+				int nNowTotal = this.nヒット数_Auto含まない[0].Perfect + this.nヒット数_Auto含まない[0].Great + this.nヒット数_Auto含まない[0].Good + this.nヒット数_Auto含まない[0].Poor + this.nヒット数_Auto含まない[0].Miss;
+				double dbたたけた率 = Math.Round((100.0 * (TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない[0].Perfect + TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない[0].Great + TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない[0].Good)) / (double)nNowTotal);
 				double dbPERFECT率 = Math.Round((100.0 * TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない[0].Perfect) / (double)nNowTotal);
 				double dbGREAT率 = Math.Round((100.0 * TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない[0].Great / (double)nNowTotal));
+				double dbGOOD率 = Math.Round((100.0 * TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない[0].Good / (double)nNowTotal));
+				double dbPOOR率 = Math.Round((100.0 * TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない[0].Poor / (double)nNowTotal));
 				double dbMISS率 = Math.Round((100.0 * TJAPlayer3.stage演奏ドラム画面.nヒット数_Auto含まない[0].Miss / (double)nNowTotal));
 
 				if (double.IsNaN(dbたたけた率))
@@ -2091,13 +2099,19 @@ namespace TJAPlayer3
 					dbPERFECT率 = 0;
 				if (double.IsNaN(dbGREAT率))
 					dbGREAT率 = 0;
+				if (double.IsNaN(dbGOOD率))
+					dbGOOD率 = 0;
+				if (double.IsNaN(dbPOOR率))
+					dbPOOR率 = 0;
 				if (double.IsNaN(dbMISS率))
 					dbMISS率 = 0;
 
-				this.t大文字表示( 202, 436, string.Format( "{0,3:##0}%", dbたたけた率 ) );
-				this.t小文字表示( 206, 494, string.Format( "{0,3:##0}%", dbPERFECT率 ), false );
-				this.t小文字表示( 206, 532, string.Format( "{0,3:##0}%", dbGREAT率 ), false );
-				this.t小文字表示( 206, 570, string.Format( "{0,3:##0}%", dbMISS率 ), false );
+				this.t大文字表示(202, 436, string.Format("{0,3:##0}%", dbたたけた率));
+				this.t小文字表示(206, 494, string.Format("{0,3:##0}%", dbPERFECT率), false);
+				this.t小文字表示(206, 532, string.Format("{0,3:##0}%", dbGOOD率), false);
+				this.t小文字表示(206, 570, string.Format("{0,3:##0}%", dbGREAT率), false);
+				this.t小文字表示(206, 608, string.Format("{0,3:##0}%", dbPOOR率), false);
+				this.t小文字表示(206, 646, string.Format("{0,3:##0}%", dbMISS率), false);
 			}
 		}
 

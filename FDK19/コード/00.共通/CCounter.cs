@@ -365,7 +365,7 @@ namespace FDK
 
 					case n3回目以降:
 
-						if ( ( this.timer.n現在時刻 - this.n現在の経過時間ms ) > 125 )
+						if ( ( this.timer.n現在時刻 - this.n現在の経過時間ms ) > 30 )
 						{
 							tキー処理();
 							this.n現在の経過時間ms = this.timer.n現在時刻;

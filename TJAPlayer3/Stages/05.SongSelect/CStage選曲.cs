@@ -127,6 +127,8 @@ namespace TJAPlayer3
 			Trace.Indent();
 			try
 			{
+				TJAPlayer3.Skin.soundタイトル音.t停止する();
+				TJAPlayer3.Skin.soundSongSelectIn.t再生する();
 				this.n確定された曲の難易度 = new int[4];
 				this.eフェードアウト完了時の戻り値 = E戻り値.継続;
 				this.bBGM再生済み = false;
@@ -140,6 +142,7 @@ namespace TJAPlayer3
 				完全に選択済み = false;
 												// Discord Presenceの更新
 				Discord.UpdatePresence("", Properties.Discord.Stage_SongSelect, TJAPlayer3.StartupTime);
+				this.voiceSongSelectChara = new CSkin.Cシステムサウンド(@"Sounds\SongSelectChara.ogg", false, false, ESoundGroup.Voice);
 			}
 			finally
 			{
@@ -455,9 +458,10 @@ namespace TJAPlayer3
 					TJAPlayer3.Tx.SongSelect_Difficulty.t2D描画(TJAPlayer3.app.Device, 830, 40, new Rectangle(0, 70 * this.n現在選択中の曲の難易度[0], 260, 70));
 				}
 
-				if( !this.bBGM再生済み && ( base.eフェーズID == CStage.Eフェーズ.共通_通常状態 ) )
+				if( !this.bBGM再生済み && ( base.eフェーズID == CStage.Eフェーズ.共通_通常状態 ) && !TJAPlayer3.Skin.soundSongSelectIn.b再生中)
 				{
 					TJAPlayer3.Skin.bgm選曲画面.t再生する();
+					voiceSongSelectChara.t再生する();
 					this.bBGM再生済み = true;
 				}
 
@@ -1417,8 +1421,9 @@ namespace TJAPlayer3
 		private int This_counter;
 
 		private bool[] popupbool = { false, false };
+        private CSkin.Cシステムサウンド voiceSongSelectChara;
 
-		//-----------------
-		#endregion
-	}
+        //-----------------
+        #endregion
+    }
 }

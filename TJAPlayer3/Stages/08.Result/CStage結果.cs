@@ -45,6 +45,11 @@ namespace TJAPlayer3
 		{
 			Trace.TraceInformation( "結果ステージを活性化します。" );
 			Trace.Indent();
+			var random = rng.Next(1, 99);
+			if (random <= 24) this.bgm結果画面 = new CSkin.Cシステムサウンド(@"Sounds\Result BGM.ogg", false, false, ESoundGroup.SongPlayback);
+			else if (random <= 50 && random >= 25) this.bgm結果画面 = new CSkin.Cシステムサウンド(@"Sounds\Result BGM_1.ogg", false, false, ESoundGroup.SongPlayback);
+			else if (random <= 75 && random >= 51) this.bgm結果画面 = new CSkin.Cシステムサウンド(@"Sounds\Result BGM_2.ogg", false, false, ESoundGroup.SongPlayback);
+			else if (random <= 99 && random >= 76) this.bgm結果画面 = new CSkin.Cシステムサウンド(@"Sounds\Result BGM_3.ogg", false, false, ESoundGroup.SongPlayback);
 			try
 			{
 				#region [ 初期化 ]
@@ -292,6 +297,8 @@ namespace TJAPlayer3
 					if( this.actFI.On進行描画() != 0 )
 					{
 						base.eフェーズID = CStage.Eフェーズ.共通_通常状態;
+						bgm結果画面.t再生する();
+						this.sound結果画面out = new CSkin.Cシステムサウンド(@"Sounds\Result out.ogg", false, false, ESoundGroup.SoundEffect);
 					}
 				}
 				else if( ( base.eフェーズID == CStage.Eフェーズ.共通_フェードアウト ) )			//&& ( this.actFO.On進行描画() != 0 ) )
@@ -321,14 +328,16 @@ namespace TJAPlayer3
 				{
 					if (TJAPlayer3.Input管理.Keyboard.bキーが押された((int)SlimDXKeys.Key.Escape))
 					{
-						TJAPlayer3.Skin.sound取消音.t再生する();
+						this.bgm結果画面.t停止する();
+						this.sound結果画面out.t再生する();
 						this.actFO.tフェードアウト開始();
 						base.eフェーズID = CStage.Eフェーズ.共通_フェードアウト;
 						this.eフェードアウト完了時の戻り値 = E戻り値.完了;
 					}
 					if ((TJAPlayer3.Input管理.Keyboard.bキーが押された((int)SlimDXKeys.Key.Return) || TJAPlayer3.Pad.b押された(Eパッド.LRed) || TJAPlayer3.Pad.b押された(Eパッド.RRed) || (TJAPlayer3.Pad.b押された(Eパッド.LRed2P) || TJAPlayer3.Pad.b押された(Eパッド.RRed2P)) && TJAPlayer3.ConfigIni.nPlayerCount >= 2) && this.bアニメが完了)
 					{
-						TJAPlayer3.Skin.sound取消音.t再生する();
+						this.bgm結果画面.t停止する();
+						this.sound結果画面out.t再生する();
 						//							this.actFO.tフェードアウト開始();
 						base.eフェーズID = CStage.Eフェーズ.共通_フェードアウト;
 						this.eフェードアウト完了時の戻り値 = E戻り値.完了;
@@ -357,18 +366,20 @@ namespace TJAPlayer3
 		private CActResultParameterPanel actParameterPanel;
 		private CActResultSongBar actSongBar;
 		private bool bアニメが完了;
-		private bool bIsCheckedWhetherResultScreenShouldSaveOrNot;				// #24509 2011.3.14 yyagi
-
+		private bool bIsCheckedWhetherResultScreenShouldSaveOrNot;              // #24509 2011.3.14 yyagi
+		private Random rng = new System.Random();
 		private CSound rResultSound;
+        private CSkin.Cシステムサウンド bgm結果画面;
+        private CSkin.Cシステムサウンド sound結果画面out;
 
-		#region [ #24609 リザルト画像をpngで保存する ]		// #24609 2011.3.14 yyagi; to save result screen in case BestRank or HiSkill.
-		/// <summary>
-		/// リザルト画像のキャプチャと保存。
-		/// 自動保存モード時は、ランク更新or演奏型スキル更新時に自動保存。
-		/// 手動保存モード時は、ランクに依らず保存。
-		/// </summary>
-		/// <param name="bIsAutoSave">true=自動保存モード, false=手動保存モード</param>
-		private void CheckAndSaveResultScreen(bool bIsAutoSave)
+        #region [ #24609 リザルト画像をpngで保存する ]		// #24609 2011.3.14 yyagi; to save result screen in case BestRank or HiSkill.
+        /// <summary>
+        /// リザルト画像のキャプチャと保存。
+        /// 自動保存モード時は、ランク更新or演奏型スキル更新時に自動保存。
+        /// 手動保存モード時は、ランクに依らず保存。
+        /// </summary>
+        /// <param name="bIsAutoSave">true=自動保存モード, false=手動保存モード</param>
+        private void CheckAndSaveResultScreen(bool bIsAutoSave)
 		{
 			string path = Path.GetDirectoryName( TJAPlayer3.DTX[0].strファイル名の絶対パス );
 			string datetime = DateTime.Now.ToString( "yyyyMMddHHmmss" );
